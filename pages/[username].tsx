@@ -30,51 +30,26 @@ type mcmmoData = {
   taming: number;
 };
 
-const Verify: NextPage = () => {
-  const router = useRouter();
-  const [username, setUsername] = useState("");
-  const [mcmmoData, setmcmmoData] = useState<mcmmoData>();
-  const [loading, setLoading] = useState(true);
-  const [fake, setFake] = useState(false);
-  const [exists, setExists] = useState(true);
-  useEffect(() => {
-    if (router.isReady) {
-      async function handleRequests() {
-        const username = router.query.username as string;
-        const uuid = await getUUIDFromUsername(username);
-        if (uuid) {
-          const mcmmo = await axios.get<mcmmoData>(`/api/mcmmo?uuid=${uuid}`);
-          if (mcmmo.data.error) {
-            setExists(false);
-          } else {
-            setmcmmoData(mcmmo.data);
-            setUsername(username);
-          }
+export async function getServerSideProps(context: {
+  query: { username: string };
+}) {
+  return {
+    props: {
+      username: context.query.username,
+      mcmmoData: await axios
+        .get<mcmmoData>(
+          `http://localhost:3000/api/mcmmo?uuid=${await getUUIDFromUsername(
+            context.query.username
+          )}`
+        )
+        .then((res) => res.data),
+    }, // will be passed to the page component as props
+  };
+}
 
-          setLoading(false);
-        } else {
-          setFake(true);
-        }
-      }
-      handleRequests();
-    }
-  }, [router.isReady, router]);
-
-  while (loading) {
-    return (
-      <div className="flex justify-center items-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blurple" />
-      </div>
-    );
-  }
-
-  while (fake) {
-    return (
-      <div className="flex justify-center items-center">
-        Hey it seems like this username doesn&apos;t exist.
-      </div>
-    );
-  }
+const Username: NextPage = (props) => {
+  const mcmmoData = props.mcmmoData;
+  const username = props.username;
 
   return (
     <section className="">
@@ -97,4 +72,4 @@ const Verify: NextPage = () => {
   );
 };
 
-export default Verify;
+export default Username;
