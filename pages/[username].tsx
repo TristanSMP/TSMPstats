@@ -6,12 +6,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { getUUIDFromUsername } from "../utils/";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
-interface Guild {
-  avatar_url: string;
-  guild_id: string;
-  name: string;
-}
 type mcmmoData = {
   repair: number;
   fishing: number;
@@ -45,13 +39,10 @@ const Verify: NextPage = () => {
         if (uuid) {
           const mcmmo = await axios.get<mcmmoData>(`/api/mcmmo?uuid=${uuid}`);
           if (mcmmo.data.powerLevel) {
-           setmcmmoData(mcmmo.data);
+            setmcmmoData(mcmmo.data);
             setUsername(username);
           } else {
-           
-
-setNoExists(true);
-
+            setNoExists(true);
           }
 
           setLoading(false);
@@ -65,15 +56,15 @@ setNoExists(true);
 
   while (loading) {
     return (
-      <div className="flex justify-center items-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blurple" />
+      <div className="flex flex-col items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blurple drop-shadow-2xl" />
       </div>
     );
   }
 
   while (fake) {
     return (
-      <div className="flex justify-center items-center">
+      <div className="flex flex-col items-center justify-center h-screen text-white text-4xl drop-shadow-2xl">
         Hey it seems like this username doesn&apos;t exist.
       </div>
     );
@@ -81,7 +72,7 @@ setNoExists(true);
 
   while (noExists) {
     return (
-      <div className="flex justify-center items-center">
+      <div className="flex flex-col items-center justify-center h-screen text-white text-4xl drop-shadow-2xl">
         Hey it seems like this username doesn&apos;t exist.
       </div>
     );

@@ -6,7 +6,7 @@ import Particles from "react-tsparticles";
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
-      <div className="noselect">
+      <div className="">
         <div className="">
           <Component {...pageProps} />
         </div>
