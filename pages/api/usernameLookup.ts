@@ -11,6 +11,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const response = await axios.get(
     `https://api.mojang.com/users/profiles/minecraft/${username}`
   );
+  if (response.status !== 200) {
+    return res.status(400).json({ error: "username not found" });
+  }
   const trimUUID: string = await response.data.id;
   const uuid: string =
     trimUUID.slice(0, 8) +
