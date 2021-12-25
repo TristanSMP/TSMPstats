@@ -48,7 +48,6 @@ html {
 
 #tsparticles canvas {
   display: block;
-  vertical-align: bottom;
   -webkit-transform: scale(1);
   -ms-transform: scale(1);
   transform: scale(1);
