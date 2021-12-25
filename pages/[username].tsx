@@ -44,7 +44,7 @@ const Verify: NextPage = () => {
         const uuid = await getUUIDFromUsername(username);
         if (uuid) {
           const mcmmo = await axios.get<mcmmoData>(`/api/mcmmo?uuid=${uuid}`);
-          if (mcmmo.data.error) {
+          if (mcmmo.data.powerLevel) {
             setExists(false);
           } else {
             setmcmmoData(mcmmo.data);
