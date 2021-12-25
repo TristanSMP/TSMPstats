@@ -76,6 +76,14 @@ const Verify: NextPage = () => {
     );
   }
 
+  while (!exists) {
+    return (
+      <div className="flex justify-center items-center">
+        Hey it seems like this username doesn&apos;t exist.
+      </div>
+    );
+  }
+
   return (
     <section className="">
       <div className="flex flex-col items-center justify-center h-screen">
