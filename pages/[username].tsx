@@ -36,7 +36,7 @@ const Verify: NextPage = () => {
   const [mcmmoData, setmcmmoData] = useState<mcmmoData>();
   const [loading, setLoading] = useState(true);
   const [fake, setFake] = useState(false);
-  const [exists, setExists] = useState(true);
+  const [noExists, setNoExists] = useState(false);
   useEffect(() => {
     if (router.isReady) {
       async function handleRequests() {
@@ -45,10 +45,13 @@ const Verify: NextPage = () => {
         if (uuid) {
           const mcmmo = await axios.get<mcmmoData>(`/api/mcmmo?uuid=${uuid}`);
           if (mcmmo.data.powerLevel) {
-            setExists(false);
-          } else {
-            setmcmmoData(mcmmo.data);
+           setmcmmoData(mcmmo.data);
             setUsername(username);
+          } else {
+           
+
+setNoExists(true);
+
           }
 
           setLoading(false);
@@ -76,7 +79,7 @@ const Verify: NextPage = () => {
     );
   }
 
-  while (!exists) {
+  while (noExists) {
     return (
       <div className="flex justify-center items-center">
         Hey it seems like this username doesn&apos;t exist.
