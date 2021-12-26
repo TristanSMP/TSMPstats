@@ -2,12 +2,7 @@ import axios from "axios";
 import { NextPage } from "next";
 import { useEffect, useState, Fragment, useRef, Component } from "react";
 import { useRouter } from "next/router";
-import Link from "next/link";
-import Image from "next/image";
-import { getUUIDFromUsername } from "../utils/";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import mcmmo from "./api/mcmmo";
-import skinview3d from "skinview3d";
+import * as skinview3d from "skinview3d";
 type mcmmoData = {
   repair: number;
   fishing: number;
@@ -50,29 +45,53 @@ const User: NextPage = () => {
   const [loading, setLoading] = useState(true);
   const [fake, setFake] = useState(false);
   const [noExists, setNoExists] = useState(false);
-  const [uuid, setUUID] = useState("");
+  const [canvas, setCanvas] = useState<HTMLCanvasElement>();
   useEffect(() => {
     if (router.isReady) {
       async function handleRequests() {
         const username = router.query.username as string;
-        const uuid = await getUUIDFromUsername(username);
-        if (uuid) {
-          const mcmmo = await axios.get<mcmmoData>(`/api/mcmmo?uuid=${uuid}`);
+        const usernameLookup = await axios.get(
+          `/api/usernameLookup?username=${username}`
+        );
+        if (usernameLookup.data.error) {
+          setNoExists(true);
+          return setLoading(false);
+        } else {
+          const mcmmo = await axios.get<mcmmoData>(
+            `/api/mcmmo?uuid=${usernameLookup.data.uuid}`
+          );
           if (mcmmo.data.powerLevel) {
             setmcmmoData(mcmmo.data);
             setUsername(username);
-            setUUID(uuid);
           } else {
-            setNoExists(true);
+            setFake(true);
+            setLoading(false);
+            return setNoExists(true);
           }
           setLoading(false);
-        } else {
-          setFake(true);
+          let skinViewer = new skinview3d.SkinViewer({
+            canvas: canvas,
+            width: 300,
+            height: 400,
+            skin: `https://crafatar.com/skins/${usernameLookup.data.uuid}`,
+          });
+
+          // Control with mouse
+          let control = skinview3d.createOrbitControls(skinViewer);
+          control.enableRotate = true;
+          control.enableZoom = false;
+          control.enablePan = false;
+
+          let run = skinViewer.animations.add(skinview3d.RunningAnimation);
+
+          // Set the speed of the running animation
+          run.speed = 0.5;
         }
       }
+
       handleRequests();
     }
-  }, [router.isReady, router]);
+  }, [router.isReady, router, canvas]);
 
   while (loading) {
     return (
@@ -102,7 +121,6 @@ const User: NextPage = () => {
     <>
       <head>
         <title>{username} - TSMPstats</title>
-        <meta property="uuid" content={uuid} />
       </head>
 
       <section className="">
@@ -112,31 +130,7 @@ const User: NextPage = () => {
               id="skinviewer"
               className="w-full h-full"
               ref={(canvas) => {
-                let skinViewer = new skinview3d.SkinViewer({
-                  canvas: canvas!,
-                  width: 300,
-                  height: 400,
-                  skin: `https://crafatar.com/skins/${uuid}`,
-                });
-
-                // Control objects with your mouse!
-                let control = skinview3d.createOrbitControls(skinViewer);
-                control.enableRotate = true;
-                control.enableZoom = false;
-                control.enablePan = false;
-
-                // Add an animation
-                let walk = skinViewer.animations.add(
-                  skinview3d.WalkingAnimation
-                );
-                // Add another animation
-                // And run for now!
-                let run = skinViewer.animations.add(
-                  skinview3d.RunningAnimation
-                );
-
-                // Set the speed of an animation
-                run.speed = 0.5;
+                setCanvas(canvas!);
               }}
             />
             {username}
@@ -152,11 +146,11 @@ const User: NextPage = () => {
                   if (skill == "error") {
                     return;
                   }
-
                   return (
                     <>
                       <div className="flex flex-wrap no-gutters items-center">
                         <div className="relative flex-grow max-w-full flex-1 px-8 lg:order-1 pr-4 pl-4 text-gray-300">
+                          {/* @ts-ignore */}
                           <p>{skillNameMap[skill]}:</p>
                         </div>
                         <div
@@ -164,6 +158,7 @@ const User: NextPage = () => {
                           style={{ fontSize: "90%" }}
                         >
                           <p className="text-gray-900 font-extrabold text-xl font-mono">
+                            {/* @ts-ignore */}
                             {mcmmoData![skill] > 0 ? mcmmoData![skill] : "-"}
                           </p>
                         </div>

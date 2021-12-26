@@ -8,9 +8,14 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     res.status(400).json({ error: "uuid is required" });
     return;
   }
-  const response = await axios.get(
-    `https://api.tristansmp.com/players/uuid/${uuid}/mcmmo`
-  );
-  const json = await response.data;
-  res.json(json);
+  try {
+    const response = await axios.get(
+      `https://api.tristansmp.com/players/uuid/${uuid}/mcmmo`
+    );
+
+    const json = await response.data;
+    res.json(json);
+  } catch {
+    return res.status(404).json({ error: "uuid not found" });
+  }
 };
