@@ -292,6 +292,11 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.0.tgz#62797cee3b8b497f6547503b2312254d4fe3c2bb"
   integrity sha512-eMhwJXc931Ihh4tkU+Y7GiLzT/y/DBNpNtr4yU9O2w3SYBsr9NaOPhQlLKRmoWtI54uNwuo0IOUFQjVOTZYRvw==
 
+"@types/offscreencanvas@^2019.6.4":
+  version "2019.6.4"
+  resolved "https://registry.yarnpkg.com/@types/offscreencanvas/-/offscreencanvas-2019.6.4.tgz#64f6d120b53925028299c744fcdd32d2cd525963"
+  integrity sha512-u8SAgdZ8ROtkTF+mfZGOscl0or6BSj9A4g37e6nvxDc+YB/oDut0wHkK2PBBiC2bNR8TS0CPV+1gAk4fNisr1Q==
+
 "@types/parse-json@^4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@types/parse-json/-/parse-json-4.0.0.tgz#2f8bb441434d163b35fb8ffdccd7138927ffb8c0"
@@ -320,6 +325,11 @@
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/@types/scrollmagic/-/scrollmagic-2.0.2.tgz#04e5bf57cdbe395545650514400a889deb78bd02"
   integrity sha512-KdJ25qSLo6fv0O2jMe7hX6Kwsd0T3vRv6uWtdrDTsJsfq0DaO3T7WhXd7eB02TezxzLIRMp5qxV7YdI8A5J++g==
+
+"@types/three@^0.132.0":
+  version "0.132.2"
+  resolved "https://registry.yarnpkg.com/@types/three/-/three-0.132.2.tgz#80dad683a326e1eb7a87d388e10188b7beb41a18"
+  integrity sha512-DpaP0sObpHvKX8zdfCqyTK526N8lQ86Qstp6MnQJ3jNYie7Bv9AMRTALuoIH8dgVZ62z9twuNvEarWHXOZwmSw==
 
 "@typescript-eslint/parser@^5.0.0":
   version "5.7.0"
@@ -2669,6 +2679,13 @@ react-refresh@0.8.3:
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.8.3.tgz#721d4657672d400c5e3c75d063c4a85fb2d5d68f"
   integrity sha512-X8jZHc7nCMjaCqoU+V2I0cOhNW+QMBwSUkeXnTi8IPe6zaRWfn60ZzvFDZqWPfmSJfjub7dDW1SP0jaHWLu/hg==
 
+react-skinview3d@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/react-skinview3d/-/react-skinview3d-3.0.1.tgz#28e4e25dd6cd11572a15e71073ebc4955b5ecb1c"
+  integrity sha512-Al22rplDZ9oyIn3ITZ0P8on15MqN+rM0+ccxZ1UjUIZBwGXf1hGUe2uZdno3SXZS2r2IFy+Rln3+JXb+4Ii6Mg==
+  dependencies:
+    skinview3d "^2.0.3"
+
 react-tsparticles@^1.37.5:
   version "1.37.5"
   resolved "https://registry.yarnpkg.com/react-tsparticles/-/react-tsparticles-1.37.5.tgz#ad00fd34c70f0011cf4b900d628c31abe8efa28b"
@@ -2862,6 +2879,22 @@ side-channel@^1.0.4:
     call-bind "^1.0.0"
     get-intrinsic "^1.0.2"
     object-inspect "^1.9.0"
+
+skinview-utils@^0.6.2:
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/skinview-utils/-/skinview-utils-0.6.2.tgz#1247aef71c472e963fd3f0db3494f18d63e31e51"
+  integrity sha512-UdjWwXCVZobtG+dc7ilvMRbtXYSqPJtWKPFdgWc44Gs4aoOmZML2lErr77h7uussXo9zrcR+fPizGshGpdETvQ==
+  dependencies:
+    "@types/offscreencanvas" "^2019.6.4"
+
+skinview3d@^2.0.3, skinview3d@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/skinview3d/-/skinview3d-2.1.0.tgz#e7a939f1ce6c3e7827b530d614ba2f2ff665eedc"
+  integrity sha512-jwE1vPzht3TUWcO3o3KXHyzNs15tdNza0QmszfL/CAU+DMMH1OTouBvpRXPKmdm0Uy6D2OtfeDLcHAL6Jpqb3g==
+  dependencies:
+    "@types/three" "^0.132.0"
+    skinview-utils "^0.6.2"
+    three "^0.132.2"
 
 slash@^3.0.0:
   version "3.0.0"
@@ -3069,6 +3102,11 @@ text-table@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
+
+three@^0.132.2:
+  version "0.132.2"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.132.2.tgz#95eb1856147237c03e887cbbe56f964b6fb40b5e"
+  integrity sha512-0wcR7LxxkXMn6Gi58gEs3QvY8WpTVXA31L2VOvpjm4ZPYFRHCZC13UqynheFoS5OXDYgtBneN0dhbaNBE8iLhQ==
 
 timers-browserify@2.0.12:
   version "2.0.12"
