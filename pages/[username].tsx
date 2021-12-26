@@ -52,13 +52,15 @@ export async function getServerSideProps(context: {
       username: context.query.username,
       mcmmoData: await axios
         .get<mcmmoData>(
-          `/api/mcmmo?uuid=${await axios
+          `https://stats.tristansmp.com/api/mcmmo?uuid=${await axios
             .get(`/api/usernameLookup?username=${context.query.username}`)
             .then((res) => res.data.uuid)}`
         )
         .then((res) => res.data),
       uuid: await axios
-        .get(`/api/usernameLookup?username=${context.query.username}`)
+        .get(
+          `https://stats.tristansmp.com/api/usernameLookup?username=${context.query.username}`
+        )
         .then((res) => res.data.uuid),
     },
   };
