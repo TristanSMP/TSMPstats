@@ -25,7 +25,6 @@ const Home: NextPage = () => {
         <title>TSMPstats</title>
       </Head>
       <div>
-        {/* Splash */}
         <section className="">
           <div className="flex flex-col items-center justify-center h-screen">
             <img
@@ -35,28 +34,31 @@ const Home: NextPage = () => {
               width={250}
               height={352}
             />
-            <div className="py-8 text-center text-white text-3xl px-10 m-10 font-extrabold">
-              <p>
-                <span className="text-transparent text-4xl bg-clip-text bg-gradient-to-tr from-[#0011ff] to-[#00aeff] hover:text-[#000000] transition-all">
-                  TSMP
-                </span>{" "}
-                stats coming{" "}
-                <span className="text-transparent text-4xl bg-clip-text bg-gradient-to-tr from-[#8400ff] to-[#ff00d4] drop-shadow hover:text-[#000000] hover:text-5xl transition-all">
-                  soon
-                </span>
-              </p>
+            <div className="py-8 text-center text-white text-3xl px-10 m-10">
+              TSMPstats is a tool for TSMP players to see their stats.
+              <form
+                className=" items-center justify-center"
+                onSubmit={(e) => {
+                  // goto /:username
+                  e.preventDefault();
+                  // @ts-ignore
+                  window.location.href = `/${e.target.elements.username.value}`;
+                }}
+              >
+                <input
+                  className="bg-gray-800 text-white rounded-full px-4 py-2 m-2"
+                  type="text"
+                  name="username"
+                  placeholder="Username"
+                />
+                <button
+                  className="bg-gray-800 text-white rounded-full px-4 py-2 m-2"
+                  type="submit"
+                >
+                  Look-up
+                </button>
+              </form>
             </div>
-            <FontAwesomeIcon
-              icon={fas.faArrowAltCircleDown}
-              size="3x"
-              className="text-white animate-pulse cursor-pointer"
-              onClick={() => {
-                window.scrollTo({
-                  top: document.documentElement.scrollHeight,
-                  behavior: "smooth",
-                });
-              }}
-            />
           </div>
         </section>
       </div>

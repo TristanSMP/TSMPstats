@@ -1,6 +1,5 @@
 import axios from "axios";
 import { NextPage } from "next";
-import { useEffect, useState, Fragment, useRef, Component } from "react";
 import { useRouter } from "next/router";
 import * as skinview3d from "skinview3d";
 type mcmmoData = {
@@ -51,14 +50,16 @@ export async function getServerSideProps(context: {
     .get(
       `https://stats.tristansmp.com/api/usernameLookup?username=${context.query.username}`
     )
-    .then((res) => res.data.uuid);
+    .then((res) => res.data.uuid)
+    .catch(() => null);
 
   return {
     props: {
       username: context.query.username,
       mcmmoData: await axios
         .get<mcmmoData>(`https://stats.tristansmp.com/api/mcmmo?uuid=${uuid}`)
-        .then((res) => res.data),
+        .then((res) => res.data)
+        .catch(() => ({ error: true })),
       uuid: uuid,
     },
   };
@@ -69,6 +70,21 @@ const User: NextPage = (props) => {
   const mcmmoData: mcmmoData = defp.mcmmoData;
   const uuid = defp.uuid;
 
+  while (!uuid) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen text-white text-4xl drop-shadow-2xl">
+        Hey it seems like this username doesn&apos;t exist.
+      </div>
+    );
+  }
+
+  while (mcmmoData.error) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen text-white text-4xl drop-shadow-2xl">
+        Hey it seems like this username doesn&apos;t exist.
+      </div>
+    );
+  }
   return (
     <>
       <head>
