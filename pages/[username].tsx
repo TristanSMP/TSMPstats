@@ -21,6 +21,12 @@ type mcmmoData = {
   taming: number;
 };
 
+interface Props {
+  username: string;
+  mcmmoData: mcmmoData;
+  uuid: string;
+}
+
 const skillNameMap = {
   repair: "Repair",
   fishing: "Fishing",
@@ -38,86 +44,30 @@ const skillNameMap = {
   taming: "Taming",
 };
 
-const User: NextPage = () => {
-  const router = useRouter();
-  const [username, setUsername] = useState("");
-  const [mcmmoData, setmcmmoData] = useState<mcmmoData>();
-  const [loading, setLoading] = useState(true);
-  const [fake, setFake] = useState(false);
-  const [noExists, setNoExists] = useState(false);
-  const [pUUID, setPUUID] = useState("");
-  const [canvas, setCanvas] = useState<HTMLCanvasElement>();
-  useEffect(() => {
-    if (router.isReady) {
-      async function handleRequests() {
-        const username = router.query.username as string;
-        const usernameLookup = await axios.get(
-          `/api/usernameLookup?username=${username}`
-        );
-        if (usernameLookup.data.error) {
-          setNoExists(true);
-          return setLoading(false);
-        } else {
-          const mcmmo = await axios.get<mcmmoData>(
-            `/api/mcmmo?uuid=${usernameLookup.data.uuid}`
-          );
-          if (mcmmo.data.powerLevel) {
-            setmcmmoData(mcmmo.data);
-            setUsername(username);
-            setPUUID(usernameLookup.data.uuid);
-          } else {
-            setFake(true);
-            setLoading(false);
-            return setNoExists(true);
-          }
-          setLoading(false);
-          let skinViewer = new skinview3d.SkinViewer({
-            canvas: canvas,
-            width: 300,
-            height: 400,
-            skin: `https://crafatar.com/skins/${usernameLookup.data.uuid}`,
-          });
-
-          // Control with mouse
-          let control = skinview3d.createOrbitControls(skinViewer);
-          control.enableRotate = true;
-          control.enableZoom = false;
-          control.enablePan = false;
-
-          let run = skinViewer.animations.add(skinview3d.RunningAnimation);
-
-          // Set the speed of the running animation
-          run.speed = 0.5;
-        }
-      }
-
-      handleRequests();
-    }
-  }, [router.isReady, router, canvas]);
-
-  while (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blurple drop-shadow-2xl" />
-      </div>
-    );
-  }
-
-  while (fake) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen text-white text-4xl drop-shadow-2xl">
-        Hey it seems like this username doesn&apos;t exist.
-      </div>
-    );
-  }
-
-  while (noExists) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen text-white text-4xl drop-shadow-2xl">
-        Hey it seems like this username doesn&apos;t exist.
-      </div>
-    );
-  }
+export async function getServerSideProps(context: {
+  query: { username: string };
+}) {
+  return {
+    props: {
+      username: context.query.username,
+      mcmmoData: await axios
+        .get<mcmmoData>(
+          `/api/mcmmo?uuid=${await axios
+            .get(`/api/usernameLookup?username=${context.query.username}`)
+            .then((res) => res.data.uuid)}`
+        )
+        .then((res) => res.data),
+      uuid: await axios
+        .get(`/api/usernameLookup?username=${context.query.username}`)
+        .then((res) => res.data.uuid),
+    },
+  };
+}
+const User: NextPage = (props) => {
+  const defp = props as Props;
+  const username = defp.username;
+  const mcmmoData: mcmmoData = defp.mcmmoData;
+  const uuid = defp.uuid;
 
   return (
     <>
@@ -132,7 +82,7 @@ const User: NextPage = () => {
         />
         <meta content="https://stats.tristansmp.com/" property="og:url" />
         <meta
-          content={`https://crafatar.com/renders/body/${pUUID}`}
+          content={`https://crafatar.com/renders/body/${uuid}`}
           property="og:image"
         />
       </head>
@@ -144,7 +94,22 @@ const User: NextPage = () => {
               id="skinviewer"
               className="w-full h-full"
               ref={(canvas) => {
-                setCanvas(canvas!);
+                let skinViewer = new skinview3d.SkinViewer({
+                  canvas: canvas!,
+                  width: 300,
+                  height: 400,
+                  skin: `https://crafatar.com/skins/${uuid}`,
+                });
+                // Control with mouse
+                let control = skinview3d.createOrbitControls(skinViewer);
+                control.enableRotate = true;
+                control.enableZoom = false;
+                control.enablePan = false;
+                let run = skinViewer.animations.add(
+                  skinview3d.RunningAnimation
+                );
+                // Set the speed of the running animation
+                run.speed = 0.5;
               }}
             />
             {username}
