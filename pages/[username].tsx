@@ -47,21 +47,19 @@ const skillNameMap = {
 export async function getServerSideProps(context: {
   query: { username: string };
 }) {
+  const uuid = await axios
+    .get(
+      `https://stats.tristansmp.com/api/usernameLookup?username=${context.query.username}`
+    )
+    .then((res) => res.data.uuid);
+
   return {
     props: {
       username: context.query.username,
       mcmmoData: await axios
-        .get<mcmmoData>(
-          `https://stats.tristansmp.com/api/mcmmo?uuid=${await axios
-            .get(`/api/usernameLookup?username=${context.query.username}`)
-            .then((res) => res.data.uuid)}`
-        )
+        .get<mcmmoData>(`https://stats.tristansmp.com/api/mcmmo?uuid=${uuid}`)
         .then((res) => res.data),
-      uuid: await axios
-        .get(
-          `https://stats.tristansmp.com/api/usernameLookup?username=${context.query.username}`
-        )
-        .then((res) => res.data.uuid),
+      uuid: uuid,
     },
   };
 }
