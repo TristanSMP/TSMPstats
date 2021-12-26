@@ -45,6 +45,7 @@ const User: NextPage = () => {
   const [loading, setLoading] = useState(true);
   const [fake, setFake] = useState(false);
   const [noExists, setNoExists] = useState(false);
+  const [pUUID, setPUUID] = useState("");
   const [canvas, setCanvas] = useState<HTMLCanvasElement>();
   useEffect(() => {
     if (router.isReady) {
@@ -63,6 +64,7 @@ const User: NextPage = () => {
           if (mcmmo.data.powerLevel) {
             setmcmmoData(mcmmo.data);
             setUsername(username);
+            setPUUID(usernameLookup.data.uuid);
           } else {
             setFake(true);
             setLoading(false);
@@ -121,6 +123,18 @@ const User: NextPage = () => {
     <>
       <head>
         <title>{username} - TSMPstats</title>
+        <meta content={`${username}, TSMP Stats`} property="og:title" />
+        <meta
+          content={`TSMP Stats for ${username}. Their Power Level is ${
+            mcmmoData?.powerLevel ?? 0
+          }`}
+          property="og:description"
+        />
+        <meta content="https://stats.tristansmp.com/" property="og:url" />
+        <meta
+          content={`https://crafatar.com/renders/body/${pUUID}`}
+          property="og:image"
+        />
       </head>
 
       <section className="">
